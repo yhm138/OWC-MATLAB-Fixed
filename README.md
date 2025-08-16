@@ -49,7 +49,9 @@ This project is based on *Optical Wireless Communications System and Channel Mod
 
 ---
 
+### Star History
 
+[![Star History Chart](https://api.star-history.com/svg?repos=AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB&type=Date)](https://www.star-history.com/#AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB&Date)
 
 ### &#8627; Stargazers
 [![Stargazers repo roster for @AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB](http://reporoster.com/stars/AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB)](https://github.com/AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB/stargazers)
