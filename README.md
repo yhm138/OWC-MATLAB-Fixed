@@ -1,115 +1,114 @@
+# OWC-MATLAB-Fixed
 
-[toc]
+Corrected, toolbox-free companion code for the book
+*Optical Wireless Communications: System and Channel Modelling with MATLAB*
+(Ghassemlooy, Popoola, Rajbhandari).
 
-## Overview
+Many of the book's scripts contain bugs: wrong formulas, undefined variables,
+dummy values, index errors, swapped legends and APIs that no longer exist in
+MATLAB. Every script with a problem has a **new** corrected companion file
+`ChapterX/FIXED_<name>.m`; the original scripts are kept unchanged for comparison.
 
-This repository contains the source code related to *Optical Wireless Communications System and Channel Modelling with MATLAB*. 
-
-**Some of the original code had issues and required modifications. I have made the necessary adjustments to enhance practicality and functionality.**
-
-
-
-## Fixed, verified versions (`FIXED_*.m`)
-
-Many of the original scripts contain bugs (wrong formulas, undefined variables,
-dummy values, index errors, wrong legends, APIs removed from MATLAB, ...).
-Every script with a problem now has a **new** corrected companion file
-`ChapterX/FIXED_<name>.m`; the originals are left untouched for comparison.
-
-* The complete list of bugs and fixes is in **[FIXES.md](FIXES.md)**.
-* The fixed scripts need **no MATLAB toolbox** and also run in **GNU Octave**
-  (tested with Octave 8.4). Toolbox functions were replaced by small helpers in
-  `util/owc_*.m`.
+* **[FIXES.md](FIXES.md)** lists every bug found and how it was fixed.
+* The `FIXED_*` scripts need **no MATLAB toolbox** and also run in **GNU Octave**.
+  Toolbox functions are replaced by small helpers in `util/owc_*.m`.
 * Wherever the book gives an analytical result, the fixed scripts plot the
   simulation **and** the theory, so the model can be checked at a glance.
-* All figures produced by the fixed scripts are in [`docs/figures`](docs/figures).
+* All 29 `FIXED_*` scripts run in MATLAB R2024a and GNU Octave 8.4.
 
-### Examples
+## Results
+
+Each chapter README shows the figures of its fixed scripts, with a caption:
+[Chapter 3](Chapter3/README.md) (channel modelling) ·
+[Chapter 4](Chapter4/README.md) (modulation) ·
+[Chapter 5](Chapter5/README.md) (artificial-light interference, diffuse channels) ·
+[Chapter 6](Chapter6/README.md) (FSO under turbulence) ·
+[Chapter 8](Chapter8/README.md) (indoor VLC).
+All images are in [`docs/figures`](docs/figures).
 
 | | |
 | --- | --- |
 | ![OOK-NRZ BER](docs/figures/FIXED_program_4p4_1.png) | ![PPM HDD/SDD](docs/figures/FIXED_program_4p8_1.png) |
+| OOK-NRZ BER: simulation vs Q(√(Eb/N0)) | L-PPM hard/soft decision: simulation vs theory |
 | ![DWT FLI mitigation](docs/figures/FIXED_program_5p5_1.png) | ![BPPM APD turbulence](docs/figures/FIXED_plot_Fig6p7_1.png) |
+| DWT-based mitigation of fluorescent-light interference | BPPM with APD receiver under log-normal turbulence |
 
-## MATLAB / Octave Version
+## Requirements
 
-* Original scripts: MATLAB R2024a (several need the Communications, Signal
-  Processing or Wavelet Toolbox).
-* `FIXED_*` scripts: any recent MATLAB without toolboxes, or GNU Octave >= 6.
-
-## Directory Structure
-
-- `Chapter3/` ... `Chapter8/` - scripts per book chapter (original + `FIXED_*`).
-- `util/` - utility functions. `owc_*.m` are the corrected, toolbox-free helpers;
-  `test_owc_utils.m` checks them.
-- `run_all_fixed.m` - runs every `FIXED_*` script (optionally saving figures).
-- `FIXES.md` - bug list; `docs/figures/` - output of the fixed scripts.
-
-## Some Code Descriptions
-
-Below is a list of the MATLAB scripts included in this repository (not all):
-
-| Name                     | Description                                                                                                                     |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| `CORRECT_plot_Fig3p31.m` | The gamma-gamma probability density function (PDF)                                                                              |
-| `FIXED_plot_Fig3p28.m`   | PDF of log-normal distribution                                                                                                  |
-| `FIXED_program_3p2.m`    | Program 3.2: optical power distribution of LOS + first-reflection (diffuse) channel                                            |
-| `FIXED_program_4p4.m`    | Program 4.4: MATLAB code to simulate Bit Error Rate (BER) of On-Off Keying Non-Return-to-Zero (OOK-NRZ)                         |
-| `FIXED_program_4p5.m`    | Program 4.5: MATLAB code to simulate BER of OOK-NRZ using a matched filter-based receiver                                       |
-| `FIXED_plot_Fig4p13.m`   | Program 4.10: MATLAB code to calculate Power Spectral Density (PSD) of Discrete Pulse Interval Modulation (DPIM) (0 Guard Slot) |
-| `FIXED_program_5p5.m`    | Program 5.5: DWT-based mitigation of fluorescent-light interference                                                             |
-| `FIXED_plot_Fig6p7.m`    | BER of BPPM FSO with APD receiver under log-normal turbulence                                                                   |
-| `FIXED_program_8p3.m`    | Program 8.3: RMS delay spread over the receiving plane of a room                                                                |
-| `FIXED_program_8p4.m`    | Program 8.4: 4x4 optical MIMO with PAM and zero-forcing detection                                                               |
-
-See each chapter's `README.md` for the full list.
+* `FIXED_*` scripts: any recent MATLAB **without toolboxes**, or GNU Octave ≥ 6.
+* Original scripts: MATLAB (tested with R2024a); several need the Communications,
+  Signal Processing or Wavelet Toolbox, and some do not run at all (see FIXES.md).
 
 ## Usage
 
-The `FIXED_*` scripts add `util/` to the path automatically; just run them, e.g.
+The `FIXED_*` scripts add `util/` to the path themselves; just run them:
 
 ```matlab
 run('Chapter4/FIXED_program_4p4.m')
-run_all_fixed                        % run every fixed script
+run_all_fixed                        % run every FIXED_* script and print a summary
+run_all_fixed('Chapter5/FIXED_*')    % run a subset
 run_all_fixed('', 'docs/figures')    % ... and save all figures as PNG
+run_all_fixed('', '/tmp/owc_figs')   % the figure directory may be absolute
 ```
 
-GNU Octave (headless Linux):
+Self-checks of the helper functions:
+
+```matlab
+cd util; test_owc_utils
+```
+
+GNU Octave on a headless Linux machine:
 
 ```bash
-sudo apt-get install octave xvfb
-xvfb-run -a octave --no-gui --eval "graphics_toolkit('qt'); run_all_fixed('', 'docs/figures')"
+sudo apt-get install -y octave xvfb
+xvfb-run -a octave --no-gui --eval "graphics_toolkit('qt'); run_all_fixed('', '/tmp/owc_figs')"
 ```
 
-For the original scripts, ensure that `util/` is included in your MATLAB path:
+The figures in `docs/figures` are generated with MATLAB.
+
+For the original scripts, add `util/` to the MATLAB path first:
 
 ```matlab
 addpath('path/to/util');
 ```
 
-Units convention (as in the book): optical powers of LEDs are given in **mW**,
-so `10*log10(P)` is directly in **dBm**.
+Units (as in the book): LED optical powers are given in **mW**, so
+`10*log10(P)` is directly in **dBm**.
 
-## Contribution
+## Directory structure
 
-Feel free to contribute to this repository by forking it and submitting pull requests. Any enhancements, bug fixes, or additional features are welcome.
+- `Chapter3/` … `Chapter8/`: scripts per book chapter (originals + `FIXED_*`),
+  each with a `README.md` listing the scripts and showing the results.
+- `util/`: helper functions. `owc_*.m` are the corrected, toolbox-free helpers;
+  `test_owc_utils.m` checks them. The other files are the book's originals.
+- `run_all_fixed.m`: runs every `FIXED_*` script (optionally saving figures).
+- `FIXES.md`: list of bugs and fixes.
+- `docs/figures/`: output of the fixed scripts.
+
+## Selected scripts
+
+| Script | Description |
+| --- | --- |
+| `Chapter3/FIXED_program_3p2.m` | Program 3.2: LOS + first-reflection power distribution, all four walls |
+| `Chapter4/FIXED_program_4p4.m` | Program 4.4: BER of OOK-NRZ, simulation vs theory |
+| `Chapter4/FIXED_program_4p8.m` | Program 4.8: L-PPM with hard- and soft-decision decoding |
+| `Chapter4/FIXED_plot_Fig4p13.m` | Program 4.10: PSD of DPIM (0 guard slots) |
+| `Chapter5/FIXED_program_5p1.m` | Program 5.1: BER of OOK with fluorescent-light interference |
+| `Chapter5/FIXED_program_5p5.m` | Program 5.5: DWT-based mitigation of fluorescent-light interference |
+| `Chapter6/FIXED_plot_Fig6p7.m` | BER of BPPM FSO with APD receiver under log-normal turbulence |
+| `Chapter8/FIXED_program_8p3.m` | Program 8.3: RMS delay spread over the receiving plane, 4 LEDs × 4 walls |
+| `Chapter8/FIXED_program_8p4.m` | Program 8.4: 4×4 optical MIMO with PAM and zero-forcing detection |
+
+The full list is in each chapter's README.
+
+## Contributing
+
+Issues and pull requests are welcome: bug reports against the book's code,
+further fixes, or additional chapters.
 
 ## Acknowledgements
 
-This project is based on *Optical Wireless Communications System and Channel Modelling with MATLAB*. Special thanks to the authors and contributors of the original code.
-
----
-
-### Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB&type=Date)](https://www.star-history.com/#AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB&Date)
-
-### &#8627; Stargazers
-[![Stargazers repo roster for @AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB](http://reporoster.com/stars/AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB)](https://github.com/AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB/stargazers)
-
-### &#8627; Forkers
-[![Forkers repo roster for @AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB](http://reporoster.com/forks/AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB)](https://github.com/AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB/network/members)
-
-
-
-
+Based on the code accompanying *Optical Wireless Communications: System and
+Channel Modelling with MATLAB* and on the repository
+[AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB](https://github.com/AcraeaTerpsicore/Optical-Wireless-Communications-System-and-Channel-Modelling-with-MATLAB).
+Thanks to the authors of the book and of the original code.
