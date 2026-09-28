@@ -94,7 +94,7 @@ xvfb-run -a octave --no-gui --eval "graphics_toolkit('qt'); run_all_fixed('', 'd
 | --- | --- | --- |
 | `CORRECT_plot_Fig8p10.m` | `FIXED_plot_Fig8p10.m` | `theta` assigned twice (70 then 12.5): the 70° case was unreachable. Both cases plotted. |
 | `NEEDFIX_plot_Fig8p14.m` | `FIXED_plot_Fig8p14.m` | Walls 2–4 **copied from wall 1** (`h2=h3=h4=h1`); only one transmitter at the centre although four LED clusters were defined; x/y transposed for `surf`. |
-| `NEEDFIX_program_8p3.m` | `FIXED_program_8p3.m` | Only TX1 and wall 1; **30 ns window < longest path (~50 ns)** → late reflections dropped silently; `index` (lens) overwritten. All TX/walls, vectorised. Time resolution 0.5 → 0.1 ns, receiver grid 0.1 → 0.05 m, wall elements 0.1 → 0.05 m (the coarse bins made the surface spiky); ~15 s in Octave. |
+| `NEEDFIX_program_8p3.m` | `FIXED_program_8p3.m` | Only TX1 and wall 1; **30 ns window < longest path (~50 ns)** → late reflections dropped silently; `index` (lens) overwritten. All TX/walls, vectorised. Time resolution 0.5 → 0.1 ns, receiver grid 0.1 → 0.05 m, wall elements 0.1 → 0.05 m (the coarse bins made the surface spiky); ~15 s in Octave. **D_rms weighted with h instead of h²**: with h² the result depended on Δt (centre 0.24 → 0.13 → 0.07 ns for Δt = 0.5 → 0.1 → 0.02 ns) and coincident LOS arrivals produced ridges; with h it converges (1.75 ns). |
 | `NEO_program_8p4.m`, `OLD_program_8p4.m` | `FIXED_program_8p4.m` | **Bits counted as `nsym*M` instead of `TxN*nsym*M` → BER 4× too high**; OLD uses the removed `modem.*` API and broken lines; NEO needs the Communications Toolbox. Ideal-channel reference added. |
 
 ---

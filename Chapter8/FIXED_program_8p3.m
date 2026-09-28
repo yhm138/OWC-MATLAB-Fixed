@@ -16,7 +16,13 @@
 %  5. Time resolution 0.5 ns -> 0.1 ns and receiver grid 0.1 m -> 0.05 m
 %     (wall elements 0.05 m): with 0.5-ns bins the LOS arrivals of the four
 %     LEDs were rounded to a few bins, which made the surface spiky.
-%  D_rms = sqrt( sum((t-tau0)^2 h^2) / sum(h^2) ), tau0 = sum(t h^2)/sum(h^2).
+%  6. D_rms weighted with h(t) (power delay profile) instead of h(t)^2:
+%     with h^2 the discrete LOS impulses dominate and the result does not
+%     converge as delta_t -> 0 (the diffuse part scales with delta_t), and
+%     receivers where two LOS arrivals share a bin get (a+b)^2 instead of
+%     a^2+b^2 -> ridges along the symmetry lines. With h the result is
+%     independent of delta_t (centre: 1.75 ns for delta_t = 0.5, 0.1, 0.02 ns).
+%  D_rms = sqrt( sum((t-tau0)^2 h) / sum(h) ), tau0 = sum(t h)/sum(h).
 clear; clc; close all;
 addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'util'));
 
@@ -69,7 +75,7 @@ for ii = 1:Nx
             k = round((d1(ok,s) + D2(ok))/C/delta_t) + 1;
             h_vector = h_vector + accumarray(k, g1(ok,s).*g2(ok), [nt 1]).';
         end
-        p2 = h_vector.^2;
+        p2 = h_vector;                 % FIX 6: power weighting (h, not h^2)
         mean_delay(jj,ii) = sum(p2.*t_vector)/sum(p2);
         Drms(jj,ii) = sqrt(sum((t_vector - mean_delay(jj,ii)).^2.*p2)/sum(p2));
     end
