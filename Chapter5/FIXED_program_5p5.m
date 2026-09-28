@@ -55,8 +55,11 @@ for k = 1:numel(EbN0_db)
     ber(:, k) = nerr/(nframes*sig_length);
 end
 figure;
-semilogy(EbN0_db, ber(1,:), 'k-o', EbN0_db, ber(2,:), 'r-s', EbN0_db, ber(3,:), 'b-d');
-hold on; semilogy(EbN0_db, owc_Q(sqrt(10.^(EbN0_db/10))), 'k:');
-legend('no FLI', 'FLI, no mitigation', sprintf('FLI + DWT (D4, level %d)', Lev), 'theory, no FLI');
+% no-FLI simulation as markers only, its theory as a solid grey line
+semilogy(EbN0_db, owc_Q(sqrt(10.^(EbN0_db/10))), '-', 'color', [0.6 0.6 0.6], 'linewidth', 2.5);
+hold on;
+semilogy(EbN0_db, ber(1,:), 'ko', EbN0_db, ber(2,:), 'r-s', EbN0_db, ber(3,:), 'b-d');
+legend('no FLI (theory)', 'no FLI (simulation)', 'FLI, no mitigation', ...
+       sprintf('FLI + DWT (D4, level %d)', Lev), 'location', 'southwest');
 xlabel('E_b/N_0 (dB)'); ylabel('Bit error rate'); ylim([1e-5 1]); grid on;
 title(sprintf('OOK-NRZ at %g Mbps with FLI: DWT-based mitigation', Rb/1e6));

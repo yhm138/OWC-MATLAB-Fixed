@@ -31,4 +31,5 @@ plot(BW_PPM, P_req_PPM_soft, '-ro', 'LineWidth', 2, 'MarkerSize', 8);
 plot(BW_DPIM, P_req_DPIM, '-bd', 'LineWidth', 2, 'MarkerSize', 8);
 legend('OOK-RZ (\gamma = 1, 1/2, 1/3, 1/4)', 'PPM (hard)', 'PPM (soft)', 'DPIM (hard)');   % FIX 1
 xlabel('Normalised bandwidth requirement'); ylabel('Normalised average optical power requirement (dB)');
+xlim([0.5 7]);   % keep the OOK-NRZ point (1, 0 dB) off the y-axis tick labels
 grid on; title('Power vs. bandwidth efficiency (M = 1..5)');

@@ -6,6 +6,7 @@ function run_all_fixed(pattern, figdir)
 %   run_all_fixed                      % run all FIXED scripts
 %   run_all_fixed('Chapter4/FIXED_*')  % run a subset
 %   run_all_fixed('', 'docs/figures')  % run all and save figures
+%   run_all_fixed('', '/tmp/figs')     % figdir may also be an absolute path
 %
 %   Headless Octave:  xvfb-run -a octave --no-gui --eval "run_all_fixed('', 'docs/figures')"
 root = fileparts(mfilename('fullpath'));
@@ -33,8 +34,11 @@ if isempty(files)   % pattern without wildcard directory, e.g. 'Chapter4/FIXED_*
         files{end+1} = fullfile(d(k).folder, d(k).name); %#ok<AGROW>
     end
 end
-if ~isempty(figdir) && ~exist(fullfile(root, figdir), 'dir')
-    mkdir(fullfile(root, figdir));
+if ~isempty(figdir) && ~is_absolute(figdir)
+    figdir = fullfile(root, figdir);   % relative paths are relative to the repository root
+end
+if ~isempty(figdir) && ~exist(figdir, 'dir')
+    mkdir(figdir);
 end
 set(0, 'DefaultFigureVisible', 'off');
 if exist('OCTAVE_VERSION', 'builtin')
@@ -50,7 +54,7 @@ for k = 1:numel(files)
     if ok && ~isempty(figdir)
         figs = findall(0, 'type', 'figure');
         for n = 1:numel(figs)
-            fn = fullfile(root, figdir, sprintf('%s_%d.png', name, n));
+            fn = fullfile(figdir, sprintf('%s_%d.png', name, n));
             print(figs(n), '-dpng', '-r90', fn);
         end
     end
@@ -72,6 +76,10 @@ catch err
     ok = false;
     fprintf(2, 'ERROR: %s\n', err.message);
 end
+end
+
+function tf = is_absolute(p)
+tf = any(p(1) == '/\') || (numel(p) >= 2 && p(2) == ':');   % Unix, UNC or drive letter
 end
 
 function s = ternary(c, a, b)

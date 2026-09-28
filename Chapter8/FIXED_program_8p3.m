@@ -13,6 +13,9 @@
 %  3. The variable "index" (lens refractive index) was overwritten by the
 %     time-bin index; delay binning is done with accumarray-like indexing.
 %  4. Vectorised over wall elements (the original quadruple loop was very slow).
+%  5. Time resolution 0.5 ns -> 0.1 ns and receiver grid 0.1 m -> 0.05 m
+%     (wall elements 0.05 m): with 0.5-ns bins the LOS arrivals of the four
+%     LEDs were rounded to a few bins, which made the surface spiky.
 %  D_rms = sqrt( sum((t-tau0)^2 h^2) / sum(h^2) ), tau0 = sum(t h^2)/sum(h^2).
 clear; clc; close all;
 addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'util'));
@@ -21,13 +24,14 @@ C = 3e8*1e-9;                        % speed of light in m/ns
 theta = 70; m = -log(2)/log(cosd(theta));
 Adet = 1e-4; rho = 0.8; FOV = 60;
 lx = 5; ly = 5; lz = 3 - 0.85;       % receiver plane 0.85 m above the floor
-ngrid = 10;
-Nx = lx*ngrid; Ny = ly*ngrid;
+ngrid_rx = 20;                       % receiver grid points per metre
+ngrid_wall = 20;                     % wall elements per metre
+Nx = lx*ngrid_rx; Ny = ly*ngrid_rx;
 x = -lx/2 + lx/Nx*((1:Nx) - 0.5);   % receiver grid at cell centres (a receiver
 y = -ly/2 + ly/Ny*((1:Ny) - 0.5);   % lying in a wall plane sees no reflection)
 TP = [-lx/4 -ly/4 lz/2; lx/4 ly/4 lz/2; lx/4 -ly/4 lz/2; -lx/4 ly/4 lz/2];
-[W, Nw, dA] = owc_room_walls(lx, ly, lz, ngrid);
-delta_t = 1/2;                       % time resolution (ns)
+[W, Nw, dA] = owc_room_walls(lx, ly, lz, ngrid_wall);
+delta_t = 0.1;                       % time resolution (ns)
 Tmax = 2*sqrt(lx^2 + ly^2 + lz^2)/C; % upper bound on first-reflection delay (FIX 2)
 t_vector = 0:delta_t:ceil(Tmax);
 nt = numel(t_vector);
@@ -71,7 +75,7 @@ for ii = 1:Nx
     end
 end
 figure;
-surf(x, y, Drms);
+surf(x, y, Drms, 'EdgeColor', 'none'); colorbar;
 xlabel('X (m)'); ylabel('Y (m)'); zlabel('D_{rms} (ns)');
 title('RMS delay spread (LOS + first reflections, 4 LEDs)');
 axis([-lx/2 lx/2 -ly/2 ly/2 min(Drms(:)) max(Drms(:))]);

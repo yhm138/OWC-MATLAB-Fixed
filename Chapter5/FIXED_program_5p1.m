@@ -56,7 +56,10 @@ for k = 1:numel(EbN0_db)
 end
 figure;
 semilogy(EbN0_db, ber, 'o-'); hold on;
-semilogy(EbN0_db, owc_Q(sqrt(10.^(EbN0_db/10))), 'k--');
-xlabel('E_b/N_0 (dB)'); ylabel('Bit error rate'); ylim([1e-6 1]);
-legend('OOK with FLI (simulation)', 'OOK without FLI (theory)');
+% Without FLI the BER is < 1e-200 for Eb/N0 >= 30 dB, so the theory curve is
+% drawn over its own range (0...15 dB); the gap shows the FLI penalty.
+EbN0_th = 0:0.25:15;
+semilogy(EbN0_th, owc_Q(sqrt(10.^(EbN0_th/10))), 'k--');
+xlabel('E_b/N_0 (dB)'); ylabel('Bit error rate'); xlim([0 55]); ylim([1e-6 1]);
+legend('OOK with FLI (simulation)', 'OOK without FLI (theory)', 'location', 'southeast');
 title('OOK-NRZ, 1 Mbps, with fluorescent-light interference'); grid on;

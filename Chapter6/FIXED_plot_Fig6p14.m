@@ -50,7 +50,9 @@ semilogy(IodBm, BER2, 'o-', IodBm, BER3, '+-', IodBm, BER4, 's-', IodBm, BER1, '
 set(gca, 'ColorOrderIndex', 1);
 semilogy(IodBm, owc_Q(sqrt(K2)*Io), '--', IodBm, owc_Q(sqrt(K3)*Io), '--', ...
          IodBm, owc_Q(sqrt(K4)*Io), '--', IodBm, owc_Q(sqrt(K1*Io)), '--');
-legend('Thermal noise', 'Background noise', 'Thermal + background', 'Quantum limit', ...
-       'location', 'southwest');
+% legend below the axes: inside it would hide the lower end of the quantum-limit curve
+hl = legend('Thermal noise', 'Background noise', 'Thermal + background', 'Quantum limit', ...
+            'location', 'southoutside');
+set(hl, 'NumColumns', 2);
 xlabel('Average received power (dBm)'); ylabel('BER'); ylim([1e-10 1]); grid on;
 title(sprintf('BPSK-SIM, \\sigma_l^2 = %.2f (dashed: no turbulence)', Varl));
